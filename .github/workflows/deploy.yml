@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/siddhan-cloud-assessment
+  IMAGE_NAME: ghcr.io/vasanth1602/siddhan-cloud-assessment
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
@@ -46,6 +46,7 @@ jobs:
       # --------------------------------------------------------
       # Stage 4 — Build Docker Image
       # --------------------------------------------------------
+
       - name: Build Docker image
         run: |
           docker build \
