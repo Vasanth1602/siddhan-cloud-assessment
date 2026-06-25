@@ -308,6 +308,8 @@ This allows the EC2 instance to pull the image without authentication. This was 
 
 Follow this exact order:
 
+> **If you fork this repository:** update `IMAGE_NAME` in `.github/workflows/deploy.yml` to use your own GitHub username in lowercase (e.g., `ghcr.io/yourusername/siddhan-cloud-assessment`). The current value is hardcoded to the original author's GHCR namespace.
+
 ```bash
 # 1. Clone the repository
 git clone https://github.com/Vasanth1602/siddhan-cloud-assessment.git
@@ -372,6 +374,8 @@ Exposing a WSGI server (Gunicorn) directly to the internet is not a best practic
 
 ### Why GHCR over ECR?
 GitHub Container Registry integrates natively with GitHub Actions using `GITHUB_TOKEN` — no additional AWS IAM permissions or secret configuration required. For this assessment scope, GHCR reduces complexity without sacrificing functionality.
+
+> **Note on image naming:** `github.repository_owner` can return uppercase characters (e.g., `Vasanth1602`), but Docker and GHCR require fully lowercase repository names. The `IMAGE_NAME` is hardcoded as `ghcr.io/vasanth1602/siddhan-cloud-assessment` to avoid a build failure. A dynamic solution using `$GITHUB_ENV` was attempted, but `${{ env.* }}` expressions are resolved at parse time, not runtime — making the hardcoded approach simpler and more reliable.
 
 ### Why Manual `terraform apply` (Not in CI/CD)?
 Infrastructure lifecycle and application lifecycle are fundamentally different. Infrastructure changes (adding/removing resources) require deliberate human review. Application deployments can and should be automated. Combining both in CI/CD can lead to unintended infrastructure mutations on every code push.
