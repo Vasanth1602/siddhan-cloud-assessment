@@ -22,7 +22,7 @@ def index():
     return jsonify({
         "app": APP_NAME,
         "status": "running",
-        "message": "Welcome to Siddhan Cloud Assessment API"
+        "message": "Welcome to Siddhan Cloud Assessment"
     })
 
 
