@@ -2,7 +2,11 @@
 
 A production-ready Flask API deployed on AWS using Terraform, Docker, NGINX, and GitHub Actions CI/CD. Built as part of the Siddhan Intelligence Cloud Engineer technical assessment.
 
-**Live Application:** `http://3.109.47.241`
+| Endpoint | URL |
+|---|---|
+| **Application** | http://3.109.47.241 |
+| **Health Check** | http://3.109.47.241/health |
+| **App Info** | http://3.109.47.241/info |
 
 ---
 
@@ -51,27 +55,32 @@ This project demonstrates end-to-end cloud engineering by deploying a Python Fla
 ### Request Flow
 
 ```
-Developer (git push main)
+Developer
     │
-    ▼
-GitHub Actions (7-stage pipeline)
+    ├── terraform apply
+    │       └── Provisions VPC, Subnet, IGW, SG, IAM Role, EC2
     │
-    ├── Build & push Docker image → GHCR
-    │
-    └── SSH deploy to EC2
+    └── git push main
               │
               ▼
-         AWS VPC (10.0.0.0/16)
+         GitHub Actions (7-stage pipeline)
               │
-         Internet Gateway
+              ├── Build & push Docker image → GHCR
               │
-         Security Group (Port 80 + 22)
-              │
-         EC2 t3.micro (Amazon Linux 2023)
-              │
-         NGINX :80 (reverse proxy)
-              │
-         Flask Container :5000 (Gunicorn)
+              └── SSH deploy to EC2
+                        │
+                        ▼
+                   AWS VPC (10.0.0.0/16)
+                        │
+                   Internet Gateway
+                        │
+                   Security Group (Port 80 + 22)
+                        │
+                   EC2 t3.micro (Amazon Linux 2023)
+                        │
+                   NGINX :80 (reverse proxy)
+                        │
+                   Flask Container :5000 (Gunicorn)
 ```
 
 ---
@@ -275,7 +284,15 @@ Push to main
 | `EC2_USER` | `ec2-user` |
 | `EC2_SSH_KEY` | Full contents of the `.pem` file (including `-----BEGIN` and `-----END` lines) |
 
-Configure at: **GitHub Repository → Settings → Secrets and variables → Actions**
+**Steps to add each secret:**
+
+1. Go to your GitHub repository
+2. Click **Settings** → **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Enter the **Name** exactly as shown in the table above
+5. Enter the corresponding **Value**
+6. Click **Add secret**
+7. Repeat for all three secrets
 
 ### GHCR Package Visibility
 
@@ -283,7 +300,7 @@ After the first pipeline run pushes the image, make the package public:
 
 **GitHub → Profile → Packages → `siddhan-cloud-assessment` → Package settings → Change visibility → Public**
 
-This allows the EC2 instance to pull the image without authentication.
+This allows the EC2 instance to pull the image without authentication. This was chosen to avoid storing registry credentials on the EC2 instance for assessment purposes.
 
 ---
 
@@ -396,7 +413,7 @@ The `terraform.tfvars` file contains environment-specific values and is excluded
 
 ## Cost Awareness
 
-All resources are within AWS Free Tier limits (first 12 months):
+Resources were selected to minimize cost and remain suitable for assessment usage. Actual Free Tier eligibility depends on AWS account type and current AWS Free Tier offerings.
 
 | Resource | Free Tier | Estimated Cost (Post Free Tier) |
 |---|---|---|
@@ -405,7 +422,7 @@ All resources are within AWS Free Tier limits (first 12 months):
 | VPC, Subnet, IGW, Route Table | Always free | $0 |
 | GHCR (public package) | Always free | $0 |
 | CloudWatch Logs | 5 GB/month free | ~$0.50/GB beyond free tier |
-| **Total estimated** | **Free (in free tier)** | **< $10/month** |
+| **Total estimated** | **$0 within free tier** | **~$8–10/month depending on usage and CloudWatch log volume** |
 
 ---
 
