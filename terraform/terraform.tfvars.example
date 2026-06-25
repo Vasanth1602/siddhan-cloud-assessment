@@ -1,0 +1,18 @@
+# Copy this file to terraform.tfvars and fill in your values
+# terraform.tfvars is gitignored and should NEVER be committed
+
+# Name of the EC2 key pair created in AWS Console
+# Example: siddhan-assessment-key
+key_name = "siddhan-assessment-key"
+
+# AWS region (default: ap-south-1 Mumbai)
+aws_region = "ap-south-1"
+
+# EC2 instance type (t2.micro is free tier eligible)
+instance_type = "t2.micro"
+
+# Project name (used for naming and tagging all resources)
+project_name = "siddhan-assessment"
+
+# Environment tag
+environment = "assessment"
