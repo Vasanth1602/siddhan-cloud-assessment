@@ -333,6 +333,7 @@ terraform apply
 # Note the public IP from outputs
 
 # 6. Add GitHub Secrets (EC2_HOST, EC2_USER, EC2_SSH_KEY)
+   → [See CI/CD Workflow → GitHub Secrets Required](#cicd-workflow)
 
 # 7. Push code to trigger deployment
 git push origin main
